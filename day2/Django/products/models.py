@@ -12,7 +12,11 @@ class Author(models.Model):
 class Book(models.Model):   # Book Product
     author = models.ForeignKey(Author,
                                on_delete=models.CASCADE, related_name="books")
+    name = models.CharField(max_length=80)
     description = models.CharField(max_length=120)
     price = models.IntegerField()
     shipping_cost = models.IntegerField()
     quantity = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.name} by {self.author.name}"
