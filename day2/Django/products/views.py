@@ -15,22 +15,29 @@ from django.http import JsonResponse
 from .models import Book, Author
 
 def book_list(request):
-    print('Request를 받았다.')
-    books = Book.objects.all()  # Book Object를 다 가져온다
-    data = {"books": list(books.values())}
-    response = JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
-    return response
+    try:
+        print('Request를 받았다.')
+        books = Book.objects.all()  # Book Object를 다 가져온다
+        data = {"books": list(books.values())}
+        response = JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
+        return response
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 def book_detail(request, pk):
-    book = Book.objects.get(pk=pk)
-    data = {
-        "book": {
-            "author": book.author.name,
-            "name": book.name,
-            "description": book.description,
-            "shipping_cost": book.shipping_cost,
-            "quantity": book.quantity
+    try:
+        book = Book.objects.get(pk=pk)
+        data = {
+            "book": {
+                "author": book.author.name,
+                "name": book.name,
+                "description": book.description,
+                "shipping_cost": book.shipping_cost,
+                "quantity": book.quantity
+            }
         }
-    }
-    response = JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
-    return response
+        response = JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
+        return response
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500, safe=False, json_dumps_params={'ensure_ascii': False})
+
